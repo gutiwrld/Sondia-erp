@@ -13,6 +13,11 @@ export default defineConfig({
     baseURL: process.env.E2E_BASE_URL ?? "http://localhost:3000",
     locale: "es-ES",
     timezoneId: "Europe/Madrid",
-    launchOptions: process.env.PW_CHROMIUM_PATH ? { executablePath: process.env.PW_CHROMIUM_PATH } : undefined,
+    launchOptions: {
+      args: ["--lang=es-ES"],
+      // Los campos de fecha nativos siguen el idioma del sistema: dd/mm/aaaa.
+      env: { ...process.env, LANG: "es_ES.UTF-8", LANGUAGE: "es_ES" } as Record<string, string>,
+      ...(process.env.PW_CHROMIUM_PATH ? { executablePath: process.env.PW_CHROMIUM_PATH } : {}),
+    },
   },
 });

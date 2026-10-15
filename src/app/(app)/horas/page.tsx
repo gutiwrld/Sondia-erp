@@ -66,7 +66,8 @@ export default async function HorasPage({ searchParams }: PageProps<"/horas">) {
   };
 
   const personaTabs = [
-    ...members.map((m) => ({ id: m.id, label: m.id === me.id ? "Yo" : m.short_name })),
+    { id: me.id, label: "Yo" },
+    ...members.filter((m) => m.id !== me.id).map((m) => ({ id: m.id, label: m.short_name })),
     { id: "equipo", label: "Equipo" },
   ];
 
@@ -149,8 +150,10 @@ export default async function HorasPage({ searchParams }: PageProps<"/horas">) {
             ) : selected?.id === me.id ? (
               <Empty title={isCurrentWeek ? "Aún no has apuntado horas esta semana" : "No apuntaste horas esta semana"}>
                 Escribe la duración arriba (<span className="num">1,5</span>, <span className="num">1h30</span> o{" "}
-                <span className="num">90m</span>), elige la categoría y pulsa Enter. Desde cualquier pantalla puedes
-                pulsar <kbd className="num">H</kbd> o usar el cronómetro.
+                <span className="num">90m</span>), elige la categoría y pulsa «Apuntar».{" "}
+                <span className="max-md:hidden">
+                  Desde cualquier pantalla puedes pulsar <kbd className="num">H</kbd> o usar el cronómetro.
+                </span>
               </Empty>
             ) : (
               <Empty title={selected ? `${selected.short_name} no tiene horas esta semana` : "Nadie ha apuntado horas esta semana"} />
@@ -191,7 +194,7 @@ export default async function HorasPage({ searchParams }: PageProps<"/horas">) {
           <section aria-labelledby="equipo-horas">
             <SectionHeading id="equipo-horas" title="Equipo" />
             <ul className="flex flex-col">
-              {members.map((m) => {
+              {[...members].sort((a, b) => Number(b.id === me.id) - Number(a.id === me.id)).map((m) => {
                 const done = byMember.get(m.id) ?? 0;
                 const goal = m.weekly_hours_goal * 60;
                 const expected = expectedMinutes(m.weekly_hours_goal, week, today);

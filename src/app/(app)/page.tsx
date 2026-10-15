@@ -161,7 +161,7 @@ export default async function MiEspacioPage() {
                   <li key={t.id} className="flex min-h-10 items-center gap-1 border-b border-line pr-1">
                     <TaskCheck id={t.id} title={t.title} done={false} />
                     <span className="min-w-0 flex-1 py-2">
-                      <span className="block truncate text-[13px]">{t.title}</span>
+                      <span className="line-clamp-2 block text-[13px] md:truncate">{t.title}</span>
                       {t.client ? <span className="block truncate text-[12px] text-muted">{t.client.name}</span> : null}
                     </span>
                     {t.priority === "alta" ? <Chip>Alta</Chip> : null}
@@ -226,9 +226,13 @@ export default async function MiEspacioPage() {
                 const future = d > today;
                 return (
                   <div key={d} role="listitem" className="flex flex-col items-center gap-1.5" aria-label={`${formatShortDate(d)}: ${m ? formatHours(m) : "sin horas"}`}>
-                    <div className="flex h-16 w-full items-end overflow-hidden rounded-xs bg-surface-sunken">
+                    <div className="flex h-16 w-full items-end justify-center border-b border-line">
                       <div
-                        className={cx("w-full", m ? "bg-text" : "", future && "opacity-0")}
+                        className={cx(
+                          "w-full max-w-[20px] rounded-t-xs",
+                          isToday ? "bg-text" : "bg-muted/45",
+                          future && "opacity-0",
+                        )}
                         style={{ height: `${(m / maxDay) * 100}%` }}
                       />
                     </div>

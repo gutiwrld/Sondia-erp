@@ -66,7 +66,7 @@ export function MemberRow({ member, isMe }: { member: Member; isMe: boolean }) {
               inputMode="decimal"
               disabled={pending || !member.active}
               aria-invalid={Boolean(error)}
-              className="num h-7 w-16 text-right"
+              className="num h-7 max-w-16 text-right"
             />
             <span className="text-[12px] text-muted">h</span>
           </span>

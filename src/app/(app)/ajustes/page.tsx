@@ -17,7 +17,7 @@ export default async function AjustesPage() {
   return (
     <>
       <PageHeader title="Ajustes" />
-      <div className="grid gap-4 px-4 py-6 md:px-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-4 px-4 py-6 md:px-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <Card icon={Users} title="Equipo" description="Quién puede entrar y su objetivo semanal de horas." wide>
           <div className="-mx-4 overflow-x-auto">
             <table className="w-full min-w-[560px] text-[13px]">
@@ -90,7 +90,7 @@ function Card({
   return (
     <section
       aria-labelledby={`card-${title}`}
-      className={`rounded-md border border-line bg-surface p-4 ${wide ? "xl:col-span-2" : ""}`}
+      className={`min-w-0 rounded-md border border-line bg-surface p-4 ${wide ? "xl:col-span-2" : ""}`}
     >
       <div className="mb-4 flex items-start gap-3">
         <Icon className="mt-0.5 size-4 text-muted" aria-hidden />

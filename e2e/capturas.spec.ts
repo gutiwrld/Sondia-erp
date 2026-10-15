@@ -31,6 +31,7 @@ async function context(browser: Browser, vp: (typeof VIEWPORTS)[number], scheme:
 }
 
 test("capturas", async ({ browser }) => {
+  test.skip(Boolean(process.env.CAPTURAS_VACIO), "Con CAPTURAS_VACIO solo van las de primer uso");
   test.setTimeout(240_000);
   for (const vp of VIEWPORTS) {
     for (const scheme of SCHEMES) {
@@ -63,5 +64,25 @@ test("capturas", async ({ browser }) => {
       await page.screenshot({ path: `${OUT}/registro-rapido-${suffix}.png` });
       await ctx.close();
     }
+  }
+});
+
+// Primer uso: se ejecuta con CAPTURAS_VACIO=1 sobre una base de datos vacía.
+test("capturas de primer uso", async ({ browser }) => {
+  test.skip(!process.env.CAPTURAS_VACIO, "Solo con CAPTURAS_VACIO=1");
+  for (const [vp, scheme] of [
+    [VIEWPORTS[0], "dark"],
+    [VIEWPORTS[1], "light"],
+  ] as const) {
+    const suffix = `${vp.name}-${scheme === "light" ? "claro" : "oscuro"}`;
+    const ctx = await context(browser, vp, scheme);
+    const page = await ctx.newPage();
+    await loginWithMagicLink(page, "hugo@sondia.test");
+    for (const p of PAGES.slice(0, 2)) {
+      await page.goto(p.path);
+      await page.waitForLoadState("networkidle");
+      await page.screenshot({ path: `${OUT}/vacio-${p.name}-${suffix}.png`, fullPage: true });
+    }
+    await ctx.close();
   }
 });
