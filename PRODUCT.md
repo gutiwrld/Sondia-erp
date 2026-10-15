@@ -10,7 +10,7 @@ web
 
 Next.js (App Router) + TypeScript + Tailwind CSS + Supabase (Auth con enlace mágico, Postgres, Row Level Security), desplegado en Vercel. Migraciones SQL versionadas en `supabase/migrations/`. Vitest para los tests de reglas de negocio y Playwright para las capturas (1440 px y 390 px, claro y oscuro). Confirmado por Guzmán el 15 oct 2026.
 
-Repositorio: va a su propio repo de GitHub (`sondia-erp`), separado de la Porra Mundial. Pendiente de crear: la integración de Claude no tiene permiso para crear repos.
+Repositorio: `gutiwrld/sondia-erp` (privado), separado de la Porra Mundial.
 
 ## Users
 
