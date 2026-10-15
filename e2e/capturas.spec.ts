@@ -15,6 +15,9 @@ const SCHEMES = ["light", "dark"] as const;
 const PAGES = [
   { path: "/", name: "mi-espacio" },
   { path: "/horas", name: "horas" },
+  { path: "/tareas?vista=lista", name: "tareas-lista" },
+  { path: "/tareas?vista=tablero", name: "tareas-tablero" },
+  { path: "/objetivos", name: "objetivos" },
   { path: "/ajustes", name: "ajustes" },
 ];
 
@@ -52,6 +55,14 @@ test("capturas", async ({ browser }) => {
         await page.screenshot({ path: `${OUT}/${p.name}-${suffix}.png`, fullPage: true });
       }
 
+      // Panel de una tarea abierto.
+      await page.goto("/tareas?vista=lista");
+      await page.waitForLoadState("networkidle");
+      await page.getByRole("button", { name: "Llamar a Embutidos Pimar para cerrar la propuesta" }).click();
+      await page.getByRole("dialog", { name: "Tarea" }).waitFor();
+      await page.waitForTimeout(300);
+      await page.screenshot({ path: `${OUT}/tarea-panel-${suffix}.png` });
+
       // Registro rápido abierto sobre Mi espacio.
       await page.goto("/");
       await page.waitForLoadState("networkidle");
@@ -78,7 +89,7 @@ test("capturas de primer uso", async ({ browser }) => {
     const ctx = await context(browser, vp, scheme);
     const page = await ctx.newPage();
     await loginWithMagicLink(page, "hugo@sondia.test");
-    for (const p of PAGES.slice(0, 2)) {
+    for (const p of PAGES.filter((x) => ["mi-espacio", "tareas-lista", "objetivos"].includes(x.name))) {
       await page.goto(p.path);
       await page.waitForLoadState("networkidle");
       await page.screenshot({ path: `${OUT}/vacio-${p.name}-${suffix}.png`, fullPage: true });

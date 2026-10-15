@@ -29,8 +29,8 @@ export const NAV: NavGroup[] = [
     items: [
       { href: "/", label: "Mi espacio", icon: Home },
       { href: "/horas", label: "Horas", icon: Clock },
-      { href: "/tareas", label: "Tareas", icon: ListChecks, phase: 2 },
-      { href: "/objetivos", label: "Objetivos de la semana", icon: Flag, phase: 2 },
+      { href: "/tareas", label: "Tareas", icon: ListChecks },
+      { href: "/objetivos", label: "Objetivos de la semana", icon: Flag },
     ],
   },
   {

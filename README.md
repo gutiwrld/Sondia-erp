@@ -11,7 +11,7 @@ Herramienta interna de SondIA (Guzmán, Dani y Hugo): horas, tareas, LPs y OBVs,
 | Fase | Contenido | Estado |
 |---|---|---|
 | 1 | Acceso, layout, Mi espacio, Horas, Ajustes de equipo, esquema completo | Hecha |
-| 2 | Tareas y Objetivos semanales | Pendiente |
+| 2 | Tareas (lista y tablero) y Objetivos semanales con arrastre | Hecha |
 | 3 | Pipeline, Leads, ficha de cliente, cobros, importador CSV y seed real | Pendiente |
 | 4 | LPs y OBVs, Inicio del equipo, buscador ⌘K | Pendiente |
 
@@ -35,8 +35,8 @@ El seed local (`supabase/seed.sql`) crea tres miembros de prueba: `guzman@sondia
 ```bash
 npm test            # reglas de negocio (Vitest)
 npm run test:db     # reglas en la base de datos (pgTAP)
-npx playwright test e2e/fase1.spec.ts         # extremo a extremo (con la app en marcha)
-npx playwright test e2e/capturas.spec.ts      # capturas → docs/capturas/fase-1
+npx playwright test e2e/fase1.spec.ts e2e/fase2.spec.ts e2e/overflow.spec.ts  # extremo a extremo (con la app en marcha)
+CAPTURAS_FASE=fase-2 npx playwright test e2e/capturas.spec.ts  # capturas → docs/capturas/fase-2
 npm run typecheck && npm run lint
 ```
 

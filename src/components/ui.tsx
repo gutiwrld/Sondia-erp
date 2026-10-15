@@ -9,7 +9,7 @@ export function cx(...parts: Array<string | false | null | undefined>) {
 
 // --- Botones -----------------------------------------------------------------
 
-type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
+type ButtonVariant = "primary" | "strong" | "secondary" | "ghost" | "danger";
 type ButtonSize = "sm" | "md" | "lg";
 
 const buttonBase =
@@ -17,6 +17,8 @@ const buttonBase =
 
 const buttonVariants: Record<ButtonVariant, string> = {
   primary: "bg-accent text-on-accent hover:bg-accent-hover font-semibold",
+  // Acción principal de una página sin gastar el naranja (reservado para «Apuntar horas» y avisos).
+  strong: "bg-text text-bg hover:opacity-90 font-semibold",
   secondary: "bg-surface text-text border border-line hover:bg-surface-hover hover:border-line-strong",
   ghost: "text-muted hover:text-text hover:bg-surface-hover",
   danger: "text-danger hover:bg-danger-soft",

@@ -23,8 +23,10 @@ import {
   greeting,
 } from "@/lib/format";
 import { LP_STATUS_LABELS, OBV_TYPE_LABELS, STAGE_LABELS, formatGoalDays } from "@/lib/labels";
-import { Chip, Empty, HoursMeter, PhaseNote, SectionHeading, cx } from "@/components/ui";
+import { Chip, Empty, HoursMeter, SectionHeading, cx } from "@/components/ui";
 import { GoalStatusSelect, TaskCheck } from "./my-space-controls";
+import { goalProgress } from "@/lib/goals";
+import { taskHref } from "@/lib/tasks";
 
 export const metadata: Metadata = { title: "Mi espacio" };
 
@@ -60,15 +62,13 @@ export default async function MiEspacioPage() {
   const overdueTasks = tasks.filter((t) => t.due_date! < today);
   const todayTasks = tasks.filter((t) => t.due_date === today);
 
-  // Clientes
-  const overdueActions = actions.filter((a) => a.next_action_date < today);
 
   // OBVs
   const obvRows = obvs.map((o) => ({ ...o, status: obvStatus(o.meeting_date, null, today) }));
   const lateObvs = obvRows.filter((o) => o.status.state === "fuera_de_plazo");
 
   // Objetivos
-  const goalsDone = goals.filter((g) => g.status === "hecho").length;
+  const goalStats = goalProgress(goals);
 
   return (
     <div className="mx-auto w-full max-w-[1280px]">
@@ -133,12 +133,17 @@ export default async function MiEspacioPage() {
           </p>
         </Indicator>
 
-        <Indicator href="#acciones" label="Próximas acciones">
-          <p className="num text-[22px] leading-none font-medium">{actions.length}</p>
-          <p className={cx("mt-auto pt-3 text-[12px]", overdueActions.length ? "text-accent-text" : "text-muted")}>
-            {overdueActions.length
-              ? `${overdueActions.length} ${overdueActions.length === 1 ? "vencida" : "vencidas"}`
-              : "En los próximos 7 días"}
+        <Indicator href="/objetivos" label="Objetivos de la semana">
+          <p className="num text-[22px] leading-none font-medium">
+            {goalStats.done}
+            <span className="text-[14px] text-muted"> / {goalStats.total}</span>
+          </p>
+          <p className="mt-auto pt-3 text-[12px] text-muted">
+            {goalStats.total === 0
+              ? "Sin objetivos esta semana"
+              : goalStats.done === goalStats.total
+                ? "Todos hechos"
+                : `${goalStats.total - goalStats.done} por cerrar`}
           </p>
         </Indicator>
       </section>
@@ -147,23 +152,31 @@ export default async function MiEspacioPage() {
         <div className="flex min-w-0 flex-col gap-8">
           {/* Hoy */}
           <section aria-labelledby="hoy" className="scroll-mt-4">
-            <SectionHeading id="hoy" title="Hoy" count={tasks.length} />
+            <SectionHeading
+              id="hoy"
+              title="Hoy"
+              count={tasks.length}
+              action={
+                <Link href="/tareas" className="inline-flex items-center gap-1 text-[12px] text-muted hover:text-text">
+                  Tareas <ArrowRight className="size-3" aria-hidden />
+                </Link>
+              }
+            />
             {tasks.length === 0 ? (
               <Empty compact title={openTasks ? "Nada vence hoy" : "No tienes tareas abiertas"}>
                 {openTasks
                   ? `Tienes ${openTasks} ${openTasks === 1 ? "tarea abierta" : "tareas abiertas"} con fecha más adelante.`
                   : "Las tareas con fecha de hoy o atrasadas aparecerán aquí para marcarlas con un clic."}
-                <PhaseNote phase={2}>crear y organizar tareas llega con la pantalla de Tareas.</PhaseNote>
               </Empty>
             ) : (
               <ul className="border-t border-line">
                 {[...overdueTasks, ...todayTasks].map((t) => (
                   <li key={t.id} className="flex min-h-10 items-center gap-1 border-b border-line pr-1">
                     <TaskCheck id={t.id} title={t.title} done={false} />
-                    <span className="min-w-0 flex-1 py-2">
+                    <Link href={taskHref(t.id)} className="min-w-0 flex-1 py-2 hover:underline-offset-2">
                       <span className="line-clamp-2 block text-[13px] md:truncate">{t.title}</span>
                       {t.client ? <span className="block truncate text-[12px] text-muted">{t.client.name}</span> : null}
-                    </span>
+                    </Link>
                     {t.priority === "alta" ? <Chip>Alta</Chip> : null}
                     <Chip tone={t.due_date! < today ? "accent" : "neutral"}>
                       {formatRelativeDay(t.due_date!, today)}
@@ -174,34 +187,42 @@ export default async function MiEspacioPage() {
             )}
           </section>
 
-          {/* Próximas acciones */}
-          <section aria-labelledby="acciones" className="scroll-mt-4">
-            <SectionHeading id="acciones" title="Mis próximas acciones con clientes" count={actions.length} />
-            {actions.length === 0 ? (
-              <Empty compact title="Ninguna acción en los próximos 7 días">
-                Cada cliente tiene una próxima acción con fecha. Cuando tengas alguna esta semana, aparecerá aquí.
-                <PhaseNote phase={3}>el pipeline y las fichas de cliente llegan en la fase 3.</PhaseNote>
+
+          {/* Objetivos */}
+          <section aria-labelledby="objetivos">
+            <SectionHeading
+              id="objetivos"
+              title="Mis objetivos de la semana"
+              action={
+                <Link href="/objetivos" className="inline-flex items-center gap-1 text-[12px] text-muted hover:text-text">
+                  Objetivos <ArrowRight className="size-3" aria-hidden />
+                </Link>
+              }
+            />
+            {goals.length === 0 ? (
+              <Empty compact title="Sin objetivos esta semana">
+                Los objetivos de la semana con tu nombre aparecerán aquí.{" "}
+                <Link href="/objetivos" className="text-text underline">
+                  Añadir objetivos
+                </Link>
               </Empty>
             ) : (
               <ul className="border-t border-line">
-                {actions.map((a) => {
-                  const late = a.next_action_date < today;
-                  return (
-                    <li
-                      key={a.id}
-                      className="grid min-h-11 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 border-b border-line py-2"
-                    >
-                      <span className={cx("num text-[12px]", late ? "text-accent-text" : "text-muted")}>
-                        {late ? formatRelativeDay(a.next_action_date, today) : a.next_action_date === today ? "hoy" : formatShortDate(a.next_action_date)}
+                {goals.map((g) => (
+                  <li key={g.id} className="flex min-h-10 items-start gap-3 border-b border-line py-2">
+                    <span className="min-w-0 flex-1">
+                      <span className={cx("block text-[13px]", g.status === "hecho" && "text-muted line-through decoration-line-strong")}>
+                        {g.title}
                       </span>
-                      <span className="min-w-0">
-                        <span className="block truncate text-[13px] font-medium">{a.name}</span>
-                        <span className="block truncate text-[12px] text-muted">{a.next_action || "Sin próxima acción"}</span>
+                      <span className="block text-[12px] text-muted">
+                        {[g.days.length ? formatGoalDays(g.days) : null, g.owners.length > 1 ? (g.owners.length === 3 ? "con todo el equipo" : "compartido") : null, g.carried_from_id ? "viene de la semana pasada" : null]
+                          .filter(Boolean)
+                          .join(" · ")}
                       </span>
-                      <Chip className="max-sm:hidden">{STAGE_LABELS[a.stage]}</Chip>
-                    </li>
-                  );
-                })}
+                    </span>
+                    <GoalStatusSelect id={g.id} title={g.title} status={g.status} />
+                  </li>
+                ))}
               </ul>
             )}
           </section>
@@ -259,39 +280,6 @@ export default async function MiEspacioPage() {
             )}
           </section>
 
-          {/* Objetivos */}
-          <section aria-labelledby="objetivos">
-            <SectionHeading
-              id="objetivos"
-              title="Mis objetivos de la semana"
-              action={goals.length ? <span className="num text-[12px] text-muted">{goalsDone}/{goals.length} hechos</span> : null}
-            />
-            {goals.length === 0 ? (
-              <Empty compact title="Sin objetivos esta semana">
-                Los objetivos de la semana con tu nombre aparecerán aquí.
-                <PhaseNote phase={2}>crear y arrastrar objetivos llega con su pantalla.</PhaseNote>
-              </Empty>
-            ) : (
-              <ul className="border-t border-line">
-                {goals.map((g) => (
-                  <li key={g.id} className="flex min-h-10 items-start gap-3 border-b border-line py-2">
-                    <span className="min-w-0 flex-1">
-                      <span className={cx("block text-[13px]", g.status === "hecho" && "text-muted line-through decoration-line-strong")}>
-                        {g.title}
-                      </span>
-                      <span className="block text-[12px] text-muted">
-                        {[g.days.length ? formatGoalDays(g.days) : null, g.owners.length > 1 ? (g.owners.length === 3 ? "con todo el equipo" : "compartido") : null, g.carried_from_id ? "viene de la semana pasada" : null]
-                          .filter(Boolean)
-                          .join(" · ")}
-                      </span>
-                    </span>
-                    <GoalStatusSelect id={g.id} title={g.title} status={g.status} />
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-
           {/* LPs y OBVs */}
           <section aria-labelledby="leinn" className="scroll-mt-4">
             <SectionHeading id="leinn" title="Mis LPs y OBVs" />
@@ -332,6 +320,38 @@ export default async function MiEspacioPage() {
                     <Chip>{LP_STATUS_LABELS[lp.status]}</Chip>
                   </li>
                 ))}
+              </ul>
+            )}
+          </section>
+
+          {/* Próximas acciones con clientes: en segundo plano, compactas. */}
+          <section aria-labelledby="acciones" className="scroll-mt-4">
+            <h2 id="acciones" className="flex h-8 items-center gap-2 text-[12px] font-medium text-muted">
+              Próximas acciones con clientes
+              {actions.length ? <span className="num">{actions.length}</span> : null}
+            </h2>
+            {actions.length === 0 ? (
+              <p className="text-[12px] text-muted">Ninguna en los próximos 7 días.</p>
+            ) : (
+              <ul className="flex flex-col">
+                {actions.slice(0, 5).map((a) => {
+                  const late = a.next_action_date < today;
+                  return (
+                    <li key={a.id} className="grid grid-cols-[64px_minmax(0,1fr)] items-baseline gap-2 py-1 text-[12px]">
+                      <span className={cx("num", late ? "text-accent-text" : "text-muted")}>
+                        {late || a.next_action_date === today
+                          ? formatRelativeDay(a.next_action_date, today)
+                          : formatShortDate(a.next_action_date).replace(/^\S+ /, "")}
+                      </span>
+                      <span className="truncate text-muted">
+                        <span className="text-text">{a.name}</span> · {a.next_action || STAGE_LABELS[a.stage]}
+                      </span>
+                    </li>
+                  );
+                })}
+                {actions.length > 5 ? (
+                  <li className="py-1 text-[12px] text-muted">y {actions.length - 5} más</li>
+                ) : null}
               </ul>
             )}
           </section>

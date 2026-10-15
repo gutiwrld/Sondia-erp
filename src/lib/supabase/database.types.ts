@@ -367,7 +367,10 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            "current_member_id":
+            "carry_over_goals":
+{ Args: { "p_to_week": string }; Returns: number
+                           },
+"current_member_id":
 { Args: Record<PropertyKey, never>; Returns: string
                            },
 "is_member":

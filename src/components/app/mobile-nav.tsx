@@ -22,7 +22,7 @@ export function MobileTopBar({ timer }: { timer: React.ReactNode }) {
 
 /**
  * Barra inferior en el móvil: Mi espacio · Tareas · [+ Horas] · Horas · Más.
- * Tareas y Clientes llegan en las fases 2 y 3; mientras, Horas ocupa su sitio.
+ * Clientes llega en la fase 3; mientras, Horas ocupa su sitio.
  */
 export function MobileNav() {
   const pathname = usePathname();
@@ -57,7 +57,7 @@ export function MobileNav() {
     >
       <div className="flex h-16 items-stretch">
         {item("/", "Mi espacio", Home)}
-        {item("/tareas", "Tareas", ListChecks, true)}
+        {item("/tareas", "Tareas", ListChecks)}
         <div className="flex flex-1 items-center justify-center">
           <button
             type="button"
