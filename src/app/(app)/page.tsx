@@ -13,7 +13,7 @@ import {
 } from "@/lib/data/my-space";
 import { isoWeekNumber, todayInMadrid, weekDays, weekStart } from "@/lib/dates";
 import { expectedMinutes, minutesByCategory, minutesByWeekday, paceOf, CATEGORY_LABELS, HOUR_CATEGORIES } from "@/lib/hours";
-import { obvStatus } from "@/lib/obv";
+import { obvDeadlineLabel, obvStatus } from "@/lib/obv";
 import {
   formatDayMonth,
   formatHours,
@@ -122,7 +122,7 @@ export default async function MiEspacioPage() {
           </p>
         </Indicator>
 
-        <Indicator href="#leinn" label="OBVs por redactar">
+        <Indicator href="/leinn/obvs" label="OBVs por redactar">
           <p className="num text-[22px] leading-none font-medium">{obvRows.length}</p>
           <p className={cx("mt-auto pt-3 text-[12px]", lateObvs.length ? "text-accent-text" : "text-muted")}>
             {lateObvs.length
@@ -290,26 +290,23 @@ export default async function MiEspacioPage() {
             ) : (
               <ul className="border-t border-line">
                 {obvRows.map((o) => (
-                  <li key={o.id} className="flex min-h-10 items-center gap-3 border-b border-line py-2">
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[13px]">
-                        OBV{o.number ? <span className="num"> {o.number}</span> : null} · {o.interviewee || o.company}
+                  <li key={o.id} className="border-b border-line">
+                    <Link href={`/leinn/obvs?obv=${o.id}`} className="flex min-h-10 items-center gap-3 py-2 hover:bg-surface-hover">
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[13px]">
+                          OBV{o.number ? <span className="num"> {o.number}</span> : null} · {o.interviewee || o.company}
+                        </span>
+                        <span className="block truncate text-[12px] text-muted">
+                          {OBV_TYPE_LABELS[o.type]} · reunión el {formatDayMonth(o.meeting_date)}
+                        </span>
                       </span>
-                      <span className="block truncate text-[12px] text-muted">
-                        {OBV_TYPE_LABELS[o.type]} · reunión el {formatDayMonth(o.meeting_date)}
-                      </span>
-                    </span>
-                    <Chip tone={o.status.state === "fuera_de_plazo" ? "accent" : "neutral"}>
-                      {o.status.state === "fuera_de_plazo"
-                        ? `${o.status.daysSinceMeeting} días · fuera de plazo`
-                        : o.status.daysLeft === 0
-                          ? "hoy es el último día"
-                          : `quedan ${o.status.daysLeft} ${o.status.daysLeft === 1 ? "día" : "días"}`}
-                    </Chip>
+                      <Chip tone={o.status.state === "fuera_de_plazo" ? "accent" : "neutral"}>{obvDeadlineLabel(o.status)}</Chip>
+                    </Link>
                   </li>
                 ))}
                 {lps.map((lp) => (
-                  <li key={lp.id} className="flex min-h-10 items-center gap-3 border-b border-line py-2">
+                  <li key={lp.id} className="border-b border-line">
+                    <Link href={`/leinn/lps?lp=${lp.id}`} className="flex min-h-10 items-center gap-3 py-2 hover:bg-surface-hover">
                     <span className="num w-9 shrink-0 text-[12px] text-muted">{lp.number ? `LP ${lp.number}` : "LP"}</span>
                     <span className="min-w-0 flex-1 truncate text-[13px]" title={lp.title}>
                       {lp.title}
@@ -318,6 +315,7 @@ export default async function MiEspacioPage() {
                       <span className="num shrink-0 text-[12px] text-muted">{formatDayMonth(lp.due_date)}</span>
                     ) : null}
                     <Chip>{LP_STATUS_LABELS[lp.status]}</Chip>
+                    </Link>
                   </li>
                 ))}
               </ul>

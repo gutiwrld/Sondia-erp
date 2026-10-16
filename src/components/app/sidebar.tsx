@@ -7,6 +7,7 @@ import { LogOut, Monitor, Moon, Plus, Search, Sun } from "lucide-react";
 import { SondiaLogo } from "@/components/brand";
 import { Avatar, IconButton, cx, type Person } from "@/components/ui";
 import { useQuickLog } from "@/components/app/quick-log";
+import { useCommandPalette } from "@/components/app/command-palette";
 import { RunningTimer, type TimerView } from "@/components/app/timer";
 import { NAV, isActive } from "@/components/app/nav";
 import { signOut } from "@/app/login/actions";
@@ -32,6 +33,7 @@ export function Sidebar({
 }) {
   const pathname = usePathname();
   const quickLog = useQuickLog();
+  const palette = useCommandPalette();
   const [, startTransition] = useTransition();
   const ThemeIcon = theme === "light" ? Sun : theme === "dark" ? Moon : Monitor;
 
@@ -46,9 +48,8 @@ export function Sidebar({
       <div className="flex flex-col gap-2 px-3 pb-3">
         <button
           type="button"
-          disabled
-          title="El buscador llega en la fase 4"
-          className="flex h-8 items-center gap-2 rounded-sm border border-line bg-surface px-2.5 text-[13px] text-faint"
+          onClick={() => palette.open()}
+          className="flex h-8 items-center gap-2 rounded-sm border border-line bg-surface px-2.5 text-[13px] text-muted transition-colors duration-150 hover:border-line-strong hover:text-text"
         >
           <Search className="size-3.5" aria-hidden />
           <span className="flex-1 text-left">Buscar</span>
@@ -113,6 +114,15 @@ export function Sidebar({
                     >
                       <Icon className="size-4 shrink-0" aria-hidden />
                       <span className="flex-1 truncate">{item.label}</span>
+                      {badge > 0 ? (
+                        <span
+                          title={`${badge} fuera de plazo`}
+                          className="num rounded-xs bg-accent-soft px-1.5 text-[11px] font-medium text-accent-text"
+                        >
+                          {badge}
+                          <span className="sr-only"> fuera de plazo</span>
+                        </span>
+                      ) : null}
                     </Link>
                   </li>
                 );

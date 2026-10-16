@@ -23,18 +23,20 @@ export function PipelineBoard({
   clients,
   onlyMine,
   today,
+  openNew = false,
 }: {
   me: Member;
   members: Member[];
   clients: ClientListItem[];
   onlyMine: boolean;
   today: string;
+  openNew?: boolean;
 }) {
   const toast = useToast();
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [over, setOver] = useState<ClientStage | null>(null);
-  const [creating, setCreating] = useState(false);
+  const [creating, setCreating] = useState(openNew);
   const [optimistic, move] = useOptimistic(clients, (state, m: { id: string; stage: ClientStage }) =>
     state.map((c) => (c.id === m.id ? { ...c, stage: m.stage } : c)),
   );

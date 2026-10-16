@@ -17,6 +17,7 @@ export default async function PipelinePage({ searchParams }: PageProps<"/cliente
       members={members}
       clients={onlyMine ? clients.filter((c) => c.owners.some((o) => o.member_id === me.id)) : clients}
       onlyMine={onlyMine}
+      openNew={params.nuevo === "1"}
       today={todayInMadrid()}
     />
   );

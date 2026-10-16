@@ -373,8 +373,16 @@ isOneToOne: false
 "current_member_id":
 { Args: Record<PropertyKey, never>; Returns: string
                            },
+"f_unaccent":
+{ Args: { "": string }; Returns: string
+                           },
 "is_member":
 { Args: Record<PropertyKey, never>; Returns: boolean
+                           },
+"search_all":
+{ Args: { "p_limit"?: number,"p_query": string }; Returns: {
+              "id": string,"kind": string,"rank": number,"subtitle": string,"title": string
+            }[]
                            }
           }
           Enums: {

@@ -47,3 +47,13 @@ insert into public.time_entries (member_id, date, minutes, category, note, creat
 select m.id, wk.monday + e.day_offset, e.minutes, e.category::public.hour_category, e.note, m.id
 from e cross join wk join public.members m on m.initials = e.member
 where wk.monday + e.day_offset <= current_date;
+
+-- OBVs por redactar y una LP con entrega cercana, para ver el aviso de los 3 días.
+insert into public.obvs (number, type, owner_id, interviewee, company, client_id, meeting_date)
+select 3, 'seguimiento', m.id, 'Iñaki Etxeberria', 'Gurutze-Berri',
+  (select id from public.clients where name ilike '%Gurutze%' limit 1), current_date - 5
+from public.members m where m.initials = 'D';
+insert into public.obvs (number, type, owner_id, interviewee, company, meeting_date)
+select 4, 'investigacion', m.id, 'Carmen Ruiz', 'Panadería La Espiga', current_date - 1
+from public.members m where m.initials = 'H';
+update public.learning_paths set due_date = current_date + 6, status = 'en_curso' where number = 9;

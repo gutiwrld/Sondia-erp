@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { obvStatus } from "./obv";
+import { isDueSoon, obvDeadlineLabel, obvStatus } from "./obv";
 
 describe("regla de los 3 días de las OBVs", () => {
   const meeting = "2026-10-05"; // lunes
@@ -48,5 +48,23 @@ describe("regla de los 3 días de las OBVs", () => {
   it("cruza meses", () => {
     expect(obvStatus("2026-10-30", null, "2026-11-02").state).toBe("pendiente");
     expect(obvStatus("2026-10-30", null, "2026-11-03").state).toBe("fuera_de_plazo");
+  });
+});
+
+describe("textos del plazo", () => {
+  it("para cada estado", () => {
+    expect(obvDeadlineLabel(obvStatus("2026-10-05", null, "2026-10-05"))).toBe("quedan 3 días");
+    expect(obvDeadlineLabel(obvStatus("2026-10-05", null, "2026-10-07"))).toBe("quedan 1 día");
+    expect(obvDeadlineLabel(obvStatus("2026-10-05", null, "2026-10-08"))).toBe("hoy es el último día");
+    expect(obvDeadlineLabel(obvStatus("2026-10-05", null, "2026-10-10"))).toBe("5 días · fuera de plazo");
+    expect(obvDeadlineLabel(obvStatus("2026-10-05", "2026-10-10", "2026-10-15"))).toBe("redactada fuera de plazo");
+  });
+
+  it("entregas de LP próximas", () => {
+    expect(isDueSoon("2026-10-15", "2026-10-15")).toBe(true);
+    expect(isDueSoon("2026-10-22", "2026-10-15")).toBe(true);
+    expect(isDueSoon("2026-10-23", "2026-10-15")).toBe(false);
+    expect(isDueSoon("2026-10-14", "2026-10-15")).toBe(false);
+    expect(isDueSoon(null, "2026-10-15")).toBe(false);
   });
 });

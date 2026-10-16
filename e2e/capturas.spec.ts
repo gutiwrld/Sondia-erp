@@ -3,7 +3,7 @@ import { loginWithMagicLink } from "./helpers";
 
 // Capturas de revisión: 1440 px y 390 px, tema claro y oscuro.
 // `npm run screenshots -- e2e/capturas.spec.ts` → docs/capturas/<fase>/
-const FASE = process.env.CAPTURAS_FASE ?? "fase-1";
+const FASE = process.env.CAPTURAS_FASE ?? "";
 const OUT = `docs/capturas/${FASE}`;
 
 const VIEWPORTS = [
@@ -21,6 +21,9 @@ const PAGES = [
   { path: "/clientes", name: "pipeline" },
   { path: "/clientes/leads", name: "leads" },
   { path: "/clientes/importar", name: "importar" },
+  { path: "/leinn/lps", name: "lps" },
+  { path: "/leinn/obvs", name: "obvs" },
+  { path: "/equipo", name: "equipo" },
   { path: "/ajustes", name: "ajustes" },
 ];
 
@@ -35,6 +38,9 @@ async function context(browser: Browser, vp: (typeof VIEWPORTS)[number], scheme:
     timezoneId: "Europe/Madrid",
   });
 }
+
+// Solo se generan si se pide la carpeta con CAPTURAS_FASE, para no pisar las de otras fases.
+test.skip(!FASE, "Indica la carpeta con CAPTURAS_FASE=fase-N");
 
 test("capturas", async ({ browser }) => {
   test.skip(Boolean(process.env.CAPTURAS_VACIO), "Con CAPTURAS_VACIO solo van las de primer uso");
@@ -74,6 +80,24 @@ test("capturas", async ({ browser }) => {
       await page.waitForTimeout(300);
       await page.screenshot({ path: `${OUT}/tarea-panel-${suffix}.png` });
 
+      // Panel de una OBV fuera de plazo.
+      await page.goto("/leinn/obvs");
+      await page.waitForLoadState("networkidle");
+      await page.getByRole("button", { name: /Iñaki Etxeberria/ }).click();
+      await page.getByRole("dialog", { name: "OBV" }).waitFor();
+      await page.waitForTimeout(300);
+      await page.screenshot({ path: `${OUT}/obv-panel-${suffix}.png` });
+
+      // Buscador ⌘K con resultados.
+      await page.goto("/");
+      await page.waitForLoadState("networkidle");
+      if (vp.isMobile) await page.getByRole("button", { name: "Buscar" }).first().click();
+      else await page.keyboard.press("ControlOrMeta+k");
+      await page.getByRole("combobox", { name: /Buscar clientes/ }).fill("alcaravan");
+      await page.getByRole("option", { name: /Librería Alcaraván/ }).first().waitFor();
+      await page.waitForTimeout(300);
+      await page.screenshot({ path: `${OUT}/buscador-${suffix}.png` });
+
       // Registro rápido abierto sobre Mi espacio.
       await page.goto("/");
       await page.waitForLoadState("networkidle");
@@ -100,7 +124,7 @@ test("capturas de primer uso", async ({ browser }) => {
     const ctx = await context(browser, vp, scheme);
     const page = await ctx.newPage();
     await loginWithMagicLink(page, "hugo@sondia.test");
-    for (const p of PAGES.filter((x) => ["mi-espacio", "tareas-lista", "objetivos", "pipeline", "leads"].includes(x.name))) {
+    for (const p of PAGES.filter((x) => ["mi-espacio", "tareas-lista", "objetivos", "pipeline", "leads", "lps", "obvs", "equipo"].includes(x.name))) {
       await page.goto(p.path);
       await page.waitForLoadState("networkidle");
       await page.screenshot({ path: `${OUT}/vacio-${p.name}-${suffix}.png`, fullPage: true });

@@ -43,14 +43,14 @@ export const NAV: NavGroup[] = [
   {
     label: "LEINN",
     items: [
-      { href: "/leinn/lps", label: "Learning Paths", icon: BookOpen, phase: 4 },
-      { href: "/leinn/obvs", label: "OBVs", icon: MessagesSquare, phase: 4, badgeKey: "obvs" },
+      { href: "/leinn/lps", label: "Learning Paths", icon: BookOpen },
+      { href: "/leinn/obvs", label: "OBVs", icon: MessagesSquare, badgeKey: "obvs" },
     ],
   },
   {
     label: "Equipo",
     items: [
-      { href: "/equipo", label: "Inicio del equipo", icon: Users, phase: 4 },
+      { href: "/equipo", label: "Inicio del equipo", icon: Users },
       { href: "/ajustes", label: "Ajustes", icon: Settings },
     ],
   },

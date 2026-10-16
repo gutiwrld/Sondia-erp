@@ -37,6 +37,7 @@ export default async function TareasPage({ searchParams }: PageProps<"/tareas">)
       view={view}
       filters={{ persona: ownerId === null ? "equipo" : ownerId === me.id ? "yo" : ownerId, priority, clientId }}
       openTaskId={typeof params.tarea === "string" ? params.tarea : null}
+      openNew={params.nueva === "1"}
     />
   );
 }

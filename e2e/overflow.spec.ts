@@ -6,7 +6,7 @@ test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true
 
 test("sin desbordamiento horizontal en el móvil", async ({ page }) => {
   await loginWithMagicLink(page, "guzman@sondia.test");
-  for (const path of ["/", "/horas", "/ajustes", "/tareas?vista=lista", "/tareas?vista=tablero", "/objetivos", "/clientes", "/clientes/leads", "/clientes/importar", "/mas", "ficha"]) {
+  for (const path of ["/", "/horas", "/ajustes", "/tareas?vista=lista", "/tareas?vista=tablero", "/objetivos", "/clientes", "/clientes/leads", "/clientes/importar", "/mas", "/leinn/lps", "/leinn/obvs", "/equipo", "ficha"]) {
     if (path === "ficha") {
       await page.goto("/clientes");
       await page.getByRole("link", { name: /Librería Alcaraván/ }).click();

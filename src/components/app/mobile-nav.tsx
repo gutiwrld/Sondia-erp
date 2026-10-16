@@ -2,20 +2,32 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Columns3, Home, ListChecks, Menu, Plus } from "lucide-react";
+import { Columns3, Home, ListChecks, Menu, Plus, Search } from "lucide-react";
 import { cx } from "@/components/ui";
 import { useQuickLog } from "@/components/app/quick-log";
 import { SondiaLogo } from "@/components/brand";
 import { isActive } from "@/components/app/nav";
+import { useCommandPalette } from "@/components/app/command-palette";
 
 /** Cabecera móvil: logo y, si hay cronómetro, su tiempo. */
 export function MobileTopBar({ timer }: { timer: React.ReactNode }) {
+  const palette = useCommandPalette();
   return (
     <div className="sticky top-0 z-30 flex h-12 items-center gap-3 border-b border-line bg-chrome px-4 md:hidden">
       <Link href="/" aria-label="SondIA, ir a Mi espacio">
         <SondiaLogo />
       </Link>
-      <div className="ml-auto">{timer}</div>
+      <div className="ml-auto flex items-center gap-1">
+        {timer}
+        <button
+          type="button"
+          onClick={() => palette.open()}
+          aria-label="Buscar"
+          className="flex size-10 items-center justify-center rounded-sm text-muted"
+        >
+          <Search className="size-5" aria-hidden />
+        </button>
+      </div>
     </div>
   );
 }

@@ -37,3 +37,22 @@ export function obvStatus(meetingDate: IsoDate, writtenDate: IsoDate | null, tod
     needsAttention: true,
   };
 }
+
+/** Texto corto del plazo para chips: «quedan 2 días», «hoy es el último día», «5 días · fuera de plazo». */
+export function obvDeadlineLabel(s: ObvStatus): string {
+  switch (s.state) {
+    case "fuera_de_plazo":
+      return `${s.daysSinceMeeting} días · fuera de plazo`;
+    case "pendiente":
+      return s.daysLeft === 0 ? "hoy es el último día" : `quedan ${s.daysLeft} ${s.daysLeft === 1 ? "día" : "días"}`;
+    case "redactada_tarde":
+      return "redactada fuera de plazo";
+    case "redactada":
+      return "redactada a tiempo";
+  }
+}
+
+/** ¿Entrega de LP en los próximos `days` días (incluida hoy)? */
+export function isDueSoon(due: IsoDate | null, today: IsoDate, days = 7): boolean {
+  return Boolean(due && due >= today && due <= addDays(today, days));
+}

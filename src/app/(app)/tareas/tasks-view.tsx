@@ -38,6 +38,7 @@ export function TasksView({
   view,
   filters,
   openTaskId,
+  openNew = false,
 }: {
   me: Member;
   members: Member[];
@@ -48,6 +49,7 @@ export function TasksView({
   view: "lista" | "tablero";
   filters: Filters;
   openTaskId: string | null;
+  openNew?: boolean;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -62,7 +64,7 @@ export function TasksView({
 
   const [panel, setPanel] = useState<{ mode: "new" } | { mode: "edit"; task: Task } | null>(() => {
     const t = openTaskId ? tasks.find((x) => x.id === openTaskId) : undefined;
-    return t ? { mode: "edit", task: t } : null;
+    return t ? { mode: "edit", task: t } : openNew ? { mode: "new" } : null;
   });
 
   const membersById = useMemo(() => new Map(members.map((m) => [m.id, m])), [members]);
@@ -264,7 +266,7 @@ export function TasksView({
         state={panel}
         onClose={() => {
           setPanel(null);
-          if (searchParams.has("tarea")) setParam({});
+          if (searchParams.has("tarea") || searchParams.has("nueva")) setParam({ nueva: null });
         }}
         members={members}
         me={me}
