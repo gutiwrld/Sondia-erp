@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { loginWithMagicLink } from "./helpers";
+import { login } from "./helpers";
 
 async function ready(page: Page, path: string) {
   await page.goto(path);
@@ -7,7 +7,7 @@ async function ready(page: Page, path: string) {
 }
 
 test.beforeEach(async ({ page }) => {
-  await loginWithMagicLink(page, "guzman@sondia.test");
+  await login(page, "guzman@sondia.test");
 });
 
 test("Leads: filtros con los datos reales", async ({ page }) => {

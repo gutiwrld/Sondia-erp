@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { CreditCard, Database, Mail, MessageCircle, Palette, Plug, Users } from "lucide-react";
+import { CreditCard, Database, KeyRound, Mail, MessageCircle, Palette, Plug, Users } from "lucide-react";
 import { getCurrentMember, getMembers } from "@/lib/session";
 import Link from "next/link";
 import { PageHeader } from "@/components/ui";
-import { AddMemberForm, MemberRow, ThemeChoice } from "./settings-controls";
+import { AddMemberForm, MemberRow, PasswordForm, ThemeChoice } from "./settings-controls";
 import type { ThemePreference } from "../preferences-actions";
 
 export const metadata: Metadata = { title: "Ajustes" };
@@ -38,6 +38,10 @@ export default async function AjustesPage() {
             </table>
           </div>
           <AddMemberForm />
+        </Card>
+
+        <Card icon={KeyRound} title="Tu contraseña" description={`Solo cambia la de ${me.short_name}; la de los demás sigue igual.`}>
+          <PasswordForm />
         </Card>
 
         <Card icon={Palette} title="Preferencias" description="Solo para este navegador.">

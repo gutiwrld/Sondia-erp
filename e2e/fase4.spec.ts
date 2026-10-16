@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { loginWithMagicLink } from "./helpers";
+import { login } from "./helpers";
 
 async function ready(page: Page, path: string) {
   await page.goto(path);
@@ -15,7 +15,7 @@ function isoDaysAgo(days: number) {
 }
 
 test.beforeEach(async ({ page }) => {
-  await loginWithMagicLink(page, "guzman@sondia.test");
+  await login(page, "guzman@sondia.test");
 });
 
 test("⌘K encuentra un cliente sin acentos y abre su ficha", async ({

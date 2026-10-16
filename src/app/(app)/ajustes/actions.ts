@@ -69,3 +69,20 @@ export async function setMemberActive(memberId: string, active: boolean): Promis
   revalidatePath("/", "layout");
   return { ok: true, message: active ? "Acceso devuelto" : "Acceso retirado. Sus datos se conservan." };
 }
+
+export async function changePassword(formData: FormData): Promise<FormResult> {
+  await getCurrentMember();
+  const password = String(formData.get("password") ?? "");
+  const repeat = String(formData.get("repeat") ?? "");
+  if (password.length < 8) return { ok: false, error: "Al menos 8 caracteres.", field: "password" };
+  if (password !== repeat) return { ok: false, error: "Las dos contraseñas no coinciden.", field: "repeat" };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) {
+    if (error.code === "same_password") return { ok: false, error: "Es la misma que ya tienes.", field: "password" };
+    if (error.code === "weak_password") return { ok: false, error: "Es demasiado débil; prueba con una más larga.", field: "password" };
+    return { ok: false, error: "No se ha podido cambiar la contraseña." };
+  }
+  return { ok: true, message: "Contraseña cambiada" };
+}

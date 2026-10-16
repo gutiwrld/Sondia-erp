@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Next.js (App Router) + TypeScript + Tailwind CSS + Supabase (Auth con enlace mágico, Postgres, Row Level Security), desplegado en Vercel. Migraciones SQL versionadas en `supabase/migrations/`. Vitest para los tests de reglas de negocio y Playwright para las capturas (1440 px y 390 px, claro y oscuro). Confirmado por Guzmán el 15 oct 2026.
+Next.js (App Router) + TypeScript + Tailwind CSS + Supabase (Auth con email y contraseña, Postgres, Row Level Security), desplegado en Vercel. Migraciones SQL versionadas en `supabase/migrations/`. Vitest para los tests de reglas de negocio y Playwright para las capturas (1440 px y 390 px, claro y oscuro). Confirmado por Guzmán el 15 oct 2026.
 
 Repositorio: `gutiwrld/sondia-erp` (privado), separado de la Porra Mundial.
 
@@ -50,7 +50,7 @@ Versión 1:
 
 Reglas de negocio con tests obligatorios: suma de horas por semana (lunes a domingo, hora de Madrid), regla de los 3 días de las OBVs y que un lead marcado «No contactar» no pueda volver a Contactado.
 
-Acceso: enlace mágico al email con lista cerrada de emails permitidos; RLS que solo deja entrar a los tres miembros. Todo es visible para los tres; cada registro tiene responsable.
+Acceso: email y contraseña, sin altas públicas y con lista cerrada de emails permitidos; RLS que solo deja entrar a los tres miembros. Todo es visible para los tres; cada registro tiene responsable.
 
 Fuera de la v1 (dejar preparado): facturación, nóminas, contabilidad, integraciones con Gmail y WhatsApp.
 

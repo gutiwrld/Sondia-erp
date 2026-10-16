@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { loginWithMagicLink } from "./helpers";
+import { login } from "./helpers";
 
 async function ready(page: Page, path: string) {
   await page.goto(path);
@@ -8,7 +8,7 @@ async function ready(page: Page, path: string) {
 
 test.describe("Tareas", () => {
   test.beforeEach(async ({ page }) => {
-    await loginWithMagicLink(page, "guzman@sondia.test");
+    await login(page, "guzman@sondia.test");
   });
 
   test("alta rápida, editar en el panel y marcar como hecha", async ({ page }) => {
@@ -77,7 +77,7 @@ test.describe("Tareas", () => {
 
 test.describe("Objetivos", () => {
   test.beforeEach(async ({ page }) => {
-    await loginWithMagicLink(page, "dani@sondia.test");
+    await login(page, "dani@sondia.test");
   });
 
   test("añadir, cambiar estado, editar y borrar", async ({ page }) => {
@@ -131,7 +131,7 @@ test.describe("Objetivos", () => {
 });
 
 test("Mi espacio: objetivos arriba y acciones con clientes al fondo", async ({ page }) => {
-  await loginWithMagicLink(page, "guzman@sondia.test");
+  await login(page, "guzman@sondia.test");
   await ready(page, "/");
   await expect(page.getByRole("link", { name: /Objetivos de la semana \d/ })).toBeVisible();
   await expect(page.getByRole("heading", { name: /Próximas acciones con clientes/ })).toBeVisible();

@@ -12,7 +12,8 @@
     "test:db": "bash supabase/tests/run.sh",
     "db:types": "SUPABASE_INTERNAL_IMAGE_REGISTRY=docker.io supabase gen types typescript --local > src/lib/supabase/database.types.ts",
     "screenshots": "playwright test",
-    "seed:generar": "tsx scripts/generar-seed-real.ts"
+    "seed:generar": "tsx scripts/generar-seed-real.ts",
+    "cuentas": "tsx scripts/crear-cuentas.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

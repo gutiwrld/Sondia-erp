@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { loginWithCode, loginWithMagicLink } from "./helpers";
+import { LOCAL_PASSWORD, login } from "./helpers";
 
 test.describe("Acceso", () => {
   test("sin sesión manda a /login", async ({ page }) => {
@@ -7,27 +7,63 @@ test.describe("Acceso", () => {
     await expect(page).toHaveURL(/\/login\?next=%2Fhoras/);
   });
 
-  test("un email fuera de la lista no recibe enlace", async ({ page }) => {
+  test("contraseña incorrecta", async ({ page }) => {
     await page.goto("/login");
-    await page.getByLabel("Email").fill("intruso@example.com");
-    await page.getByRole("button", { name: "Enviar enlace" }).click();
-    await expect(page.getByText("Este email no tiene acceso al ERP de SondIA.")).toBeVisible();
+    await page.getByLabel("Email").fill("guzman@sondia.test");
+    await page.getByLabel("Contraseña", { exact: true }).fill("no-es-esta");
+    await page.getByRole("button", { name: "Entrar" }).click();
+    await expect(page.getByText("Email o contraseña incorrectos.")).toBeVisible();
+    await expect(page).toHaveURL(/\/login/);
   });
 
-  test("entra con el enlace mágico", async ({ page }) => {
-    await loginWithMagicLink(page, "guzman@sondia.test");
+  test("un email sin cuenta no entra aunque acierte la contraseña", async ({ page }) => {
+    await page.goto("/login");
+    await page.getByLabel("Email").fill("intruso@example.com");
+    await page.getByLabel("Contraseña", { exact: true }).fill(LOCAL_PASSWORD);
+    await page.getByRole("button", { name: "Entrar" }).click();
+    await expect(page.getByText("Email o contraseña incorrectos.")).toBeVisible();
+  });
+
+  test("entra con email y contraseña y vuelve a la página que pedía", async ({ page }) => {
+    await page.goto("/horas");
+    await page.getByLabel("Email").fill("dani@sondia.test");
+    await page.getByLabel("Contraseña", { exact: true }).fill(LOCAL_PASSWORD);
+    await page.getByRole("button", { name: "Mostrar contraseña" }).click();
+    await expect(page.getByLabel("Contraseña", { exact: true })).toHaveAttribute("type", "text");
+    await page.getByRole("button", { name: "Entrar" }).click();
+    await expect(page).toHaveURL(/\/horas$/);
+  });
+
+  test("entra y ve su Mi espacio", async ({ page }) => {
+    await login(page, "guzman@sondia.test");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Guzmán");
   });
 
-  test("entra con el código de 6 cifras", async ({ page }) => {
-    await loginWithCode(page, "dani@sondia.test");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("Dani");
+  test("cambiar la contraseña desde Ajustes", async ({ page }) => {
+    await login(page, "hugo@sondia.test");
+    await page.goto("/ajustes");
+    await page.getByLabel("Contraseña nueva").fill("hugo-nueva-123");
+    await page.getByLabel("Repítela").fill("hugo-nueva-12");
+    await page.getByRole("button", { name: "Cambiar contraseña" }).click();
+    await expect(page.getByText("Las dos contraseñas no coinciden.")).toBeVisible();
+    await page.getByLabel("Repítela").fill("hugo-nueva-123");
+    await page.getByRole("button", { name: "Cambiar contraseña" }).click();
+    await expect(page.getByText("Contraseña cambiada")).toBeVisible();
+
+    await page.context().clearCookies();
+    await login(page, "hugo@sondia.test", "hugo-nueva-123");
+    // La deja como estaba para el resto de pruebas.
+    await page.goto("/ajustes");
+    await page.getByLabel("Contraseña nueva").fill(LOCAL_PASSWORD);
+    await page.getByLabel("Repítela").fill(LOCAL_PASSWORD);
+    await page.getByRole("button", { name: "Cambiar contraseña" }).click();
+    await expect(page.getByText("Contraseña cambiada")).toBeVisible();
   });
 });
 
 test.describe("Horas", () => {
   test.beforeEach(async ({ page }) => {
-    await loginWithMagicLink(page, "hugo@sondia.test");
+    await login(page, "hugo@sondia.test");
   });
 
   test("apuntar horas con H, ver la entrada y deshacer", async ({ page }) => {

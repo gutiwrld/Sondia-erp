@@ -5,7 +5,7 @@ import { Monitor, Moon, Sun } from "lucide-react";
 import { Avatar, Button, Field, Input, cx } from "@/components/ui";
 import { useToast } from "@/components/app/toast";
 import type { Member } from "@/lib/session";
-import { addMember, setMemberActive, updateMemberGoal } from "./actions";
+import { addMember, changePassword, setMemberActive, updateMemberGoal } from "./actions";
 import { setTheme, type ThemePreference } from "../preferences-actions";
 
 export function MemberRow({ member, isMe }: { member: Member; isMe: boolean }) {
@@ -103,7 +103,9 @@ export function AddMemberForm() {
         <Button size="sm" onClick={() => setOpen(true)}>
           Añadir email permitido
         </Button>
-        <p className="text-[12px] text-muted">Solo los emails de esta lista pueden pedir el enlace de acceso.</p>
+        <p className="text-[12px] text-muted">
+          Solo estos emails pueden tener cuenta. A uno nuevo hay que crearle la cuenta con su contraseña (ver README).
+        </p>
       </div>
     );
   }
@@ -146,6 +148,68 @@ export function AddMemberForm() {
           {error.message}
         </p>
       ) : null}
+    </form>
+  );
+}
+
+export function PasswordForm() {
+  const toast = useToast();
+  const formRef = useRef<HTMLFormElement>(null);
+  const [pending, startTransition] = useTransition();
+  const [error, setError] = useState<{ message: string; field?: string } | null>(null);
+  const err = (f: string) => (error?.field === f ? error.message : undefined);
+
+  return (
+    <form
+      ref={formRef}
+      // onSubmit y no action: si hay un error, lo escrito se queda en los campos.
+      onSubmit={(e) => {
+        e.preventDefault();
+        const fd = new FormData(e.currentTarget);
+        startTransition(async () => {
+          const result = await changePassword(fd);
+          if (result.ok) {
+            toast.show(result.message);
+            formRef.current?.reset();
+            setError(null);
+          } else setError({ message: result.error, field: result.field });
+        });
+      }}
+      className="flex flex-col gap-3"
+    >
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Field label="Contraseña nueva" htmlFor="new-password" error={err("password")}>
+          <Input
+            id="new-password"
+            name="password"
+            type="password"
+            autoComplete="new-password"
+            minLength={8}
+            required
+            aria-invalid={Boolean(err("password"))}
+          />
+        </Field>
+        <Field label="Repítela" htmlFor="repeat-password" error={err("repeat")}>
+          <Input
+            id="repeat-password"
+            name="repeat"
+            type="password"
+            autoComplete="new-password"
+            required
+            aria-invalid={Boolean(err("repeat"))}
+          />
+        </Field>
+      </div>
+      {error && !error.field ? (
+        <p className="text-[12px] text-danger" role="alert">
+          {error.message}
+        </p>
+      ) : null}
+      <div>
+        <Button type="submit" disabled={pending}>
+          {pending ? "Cambiando…" : "Cambiar contraseña"}
+        </Button>
+      </div>
     </form>
   );
 }

@@ -1,5 +1,5 @@
 import { test, type Browser } from "@playwright/test";
-import { loginWithMagicLink } from "./helpers";
+import { login } from "./helpers";
 
 // Capturas de revisión: 1440 px y 390 px, tema claro y oscuro.
 // `npm run screenshots -- e2e/capturas.spec.ts` → docs/capturas/<fase>/
@@ -57,7 +57,7 @@ test("capturas", async ({ browser }) => {
 
       const ctx = await context(browser, vp, scheme);
       const page = await ctx.newPage();
-      await loginWithMagicLink(page, "guzman@sondia.test");
+      await login(page, "guzman@sondia.test");
       for (const p of PAGES) {
         await page.goto(p.path);
         await page.waitForLoadState("networkidle");
@@ -123,7 +123,7 @@ test("capturas de primer uso", async ({ browser }) => {
     const suffix = `${vp.name}-${scheme === "light" ? "claro" : "oscuro"}`;
     const ctx = await context(browser, vp, scheme);
     const page = await ctx.newPage();
-    await loginWithMagicLink(page, "hugo@sondia.test");
+    await login(page, "hugo@sondia.test");
     for (const p of PAGES.filter((x) => ["mi-espacio", "tareas-lista", "objetivos", "pipeline", "leads", "lps", "obvs", "equipo"].includes(x.name))) {
       await page.goto(p.path);
       await page.waitForLoadState("networkidle");
