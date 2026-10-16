@@ -18,6 +18,9 @@ const PAGES = [
   { path: "/tareas?vista=lista", name: "tareas-lista" },
   { path: "/tareas?vista=tablero", name: "tareas-tablero" },
   { path: "/objetivos", name: "objetivos" },
+  { path: "/clientes", name: "pipeline" },
+  { path: "/clientes/leads", name: "leads" },
+  { path: "/clientes/importar", name: "importar" },
   { path: "/ajustes", name: "ajustes" },
 ];
 
@@ -55,6 +58,14 @@ test("capturas", async ({ browser }) => {
         await page.screenshot({ path: `${OUT}/${p.name}-${suffix}.png`, fullPage: true });
       }
 
+      // Ficha de cliente.
+      await page.goto("/clientes");
+      await page.waitForLoadState("networkidle");
+      await page.getByRole("link", { name: /Librería Alcaraván/ }).click();
+      await page.getByRole("heading", { level: 1, name: "Librería Alcaraván" }).waitFor();
+      await page.waitForLoadState("networkidle");
+      await page.screenshot({ path: `${OUT}/ficha-cliente-${suffix}.png`, fullPage: true });
+
       // Panel de una tarea abierto.
       await page.goto("/tareas?vista=lista");
       await page.waitForLoadState("networkidle");
@@ -89,7 +100,7 @@ test("capturas de primer uso", async ({ browser }) => {
     const ctx = await context(browser, vp, scheme);
     const page = await ctx.newPage();
     await loginWithMagicLink(page, "hugo@sondia.test");
-    for (const p of PAGES.filter((x) => ["mi-espacio", "tareas-lista", "objetivos"].includes(x.name))) {
+    for (const p of PAGES.filter((x) => ["mi-espacio", "tareas-lista", "objetivos", "pipeline", "leads"].includes(x.name))) {
       await page.goto(p.path);
       await page.waitForLoadState("networkidle");
       await page.screenshot({ path: `${OUT}/vacio-${p.name}-${suffix}.png`, fullPage: true });

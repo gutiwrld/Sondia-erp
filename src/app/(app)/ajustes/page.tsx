@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { CreditCard, Database, Mail, MessageCircle, Palette, Plug, Users } from "lucide-react";
 import { getCurrentMember, getMembers } from "@/lib/session";
-import { PageHeader, PhaseNote } from "@/components/ui";
+import Link from "next/link";
+import { PageHeader } from "@/components/ui";
 import { AddMemberForm, MemberRow, ThemeChoice } from "./settings-controls";
 import type { ThemePreference } from "../preferences-actions";
 
@@ -47,11 +48,15 @@ export default async function AjustesPage() {
           <ul className="flex flex-col gap-2 text-[13px]">
             <li className="flex items-center justify-between gap-3">
               <span>Importar CSV de clientes y leads</span>
-              <PhaseNote phase={3}>con el pipeline</PhaseNote>
+              <Link href="/clientes/importar" className="text-text underline">
+                Importar
+              </Link>
             </li>
             <li className="flex items-center justify-between gap-3">
-              <span>Exportar a CSV</span>
-              <PhaseNote phase={3}>con el pipeline</PhaseNote>
+              <span>Exportar clientes y leads a CSV</span>
+              <Link href="/clientes/exportar" prefetch={false} className="text-text underline">
+                Descargar
+              </Link>
             </li>
           </ul>
         </Card>

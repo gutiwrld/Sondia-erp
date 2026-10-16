@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Clock, Home, ListChecks, Menu, Plus } from "lucide-react";
+import { Columns3, Home, ListChecks, Menu, Plus } from "lucide-react";
 import { cx } from "@/components/ui";
 import { useQuickLog } from "@/components/app/quick-log";
 import { SondiaLogo } from "@/components/brand";
@@ -21,8 +21,7 @@ export function MobileTopBar({ timer }: { timer: React.ReactNode }) {
 }
 
 /**
- * Barra inferior en el móvil: Mi espacio · Tareas · [+ Horas] · Horas · Más.
- * Clientes llega en la fase 3; mientras, Horas ocupa su sitio.
+ * Barra inferior en el móvil: Mi espacio · Tareas · [+ Horas] · Clientes · Más.
  */
 export function MobileNav() {
   const pathname = usePathname();
@@ -68,8 +67,8 @@ export function MobileNav() {
             <Plus className="size-6" aria-hidden />
           </button>
         </div>
-        {item("/horas", "Horas", Clock)}
-        {item("/ajustes", "Más", Menu)}
+        {item("/clientes", "Clientes", Columns3)}
+        {item("/mas", "Más", Menu)}
       </div>
     </nav>
   );

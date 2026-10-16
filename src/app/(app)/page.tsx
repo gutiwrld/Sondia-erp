@@ -344,7 +344,10 @@ export default async function MiEspacioPage() {
                           : formatShortDate(a.next_action_date).replace(/^\S+ /, "")}
                       </span>
                       <span className="truncate text-muted">
-                        <span className="text-text">{a.name}</span> · {a.next_action || STAGE_LABELS[a.stage]}
+                        <Link href={`/clientes/${a.id}`} className="text-text hover:underline">
+                          {a.name}
+                        </Link>{" "}
+                        · {a.next_action || STAGE_LABELS[a.stage]}
                       </span>
                     </li>
                   );

@@ -36,8 +36,8 @@ export const NAV: NavGroup[] = [
   {
     label: "Comercial",
     items: [
-      { href: "/clientes", label: "Pipeline", icon: Columns3, phase: 3 },
-      { href: "/clientes/leads", label: "Leads", icon: Contact, phase: 3 },
+      { href: "/clientes", label: "Pipeline", icon: Columns3 },
+      { href: "/clientes/leads", label: "Leads", icon: Contact },
     ],
   },
   {
@@ -58,5 +58,7 @@ export const NAV: NavGroup[] = [
 
 export function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
+  // Pipeline no se marca en las páginas de Leads e importación.
+  if (href === "/clientes") return pathname === "/clientes" || /^\/clientes\/[0-9a-f-]{36}/.test(pathname);
   return pathname === href || pathname.startsWith(`${href}/`);
 }

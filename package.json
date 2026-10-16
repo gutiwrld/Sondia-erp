@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:db": "bash supabase/tests/run.sh",
     "db:types": "SUPABASE_INTERNAL_IMAGE_REGISTRY=docker.io supabase gen types typescript --local > src/lib/supabase/database.types.ts",
-    "screenshots": "playwright test"
+    "screenshots": "playwright test",
+    "seed:generar": "tsx scripts/generar-seed-real.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -33,6 +34,7 @@
     "eslint-config-next": "^16.4.1",
     "supabase": "^2.121.0",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.19.1",
     "typescript": "^5.9.3",
     "vitest": "^5.0.5"
   }
