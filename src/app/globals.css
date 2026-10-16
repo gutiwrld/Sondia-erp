@@ -1,0 +1,239 @@
+@import "tailwindcss";
+
+/*
+ * SondIA ERP · tokens (ver DESIGN.md)
+ * Un único acento (Ember) para la acción principal y lo que requiere atención.
+ * El tema sigue al sistema salvo que se elija Claro u Oscuro en Ajustes
+ * (atributo data-theme en <html>).
+ */
+
+:root {
+  --bg: #fafaf7;
+  --chrome: #f3f3ee;
+  --surface: #ffffff;
+  --surface-hover: #f0f0ea;
+  --surface-sunken: #f2f2ed;
+  --line: #e6e6e0;
+  --line-strong: #d4d4cc;
+  --text: #0d0d12;
+  --text-muted: #5f5f69;
+  --text-faint: #6b6b75;
+  --accent: #ff6a1a;
+  --accent-hover: #ff7f3a;
+  --on-accent: #0d0d12;
+  --accent-text: #b4470f;
+  --accent-soft: #fff0e6;
+  --positive: #23774a;
+  --positive-soft: #e7f3ec;
+  --danger: #c4321f;
+  --danger-soft: #fbeae7;
+  --shadow-float: 0 8px 24px -8px rgb(13 13 18 / 0.18), 0 2px 6px -2px rgb(13 13 18 / 0.08);
+  --scrim: rgb(13 13 18 / 0.32);
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0d0d12;
+  --chrome: #0a0a0e;
+  --surface: #15151c;
+  --surface-hover: #1c1c25;
+  --surface-sunken: #111117;
+  --line: #26262f;
+  --line-strong: #34343f;
+  --text: #ececE6;
+  --text-muted: #9a9aa5;
+  --text-faint: #868691;
+  --accent: #ff6a1a;
+  --accent-hover: #ff7f3a;
+  --on-accent: #0d0d12;
+  --accent-text: #ff8a4c;
+  --accent-soft: #2a1810;
+  --positive: #4fbf85;
+  --positive-soft: #12261b;
+  --danger: #ff6b5e;
+  --danger-soft: #2c1412;
+  --shadow-float: 0 12px 32px -8px rgb(0 0 0 / 0.6), 0 2px 6px -2px rgb(0 0 0 / 0.4);
+  --scrim: rgb(0 0 0 / 0.55);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d0d12;
+    --chrome: #0a0a0e;
+    --surface: #15151c;
+    --surface-hover: #1c1c25;
+    --surface-sunken: #111117;
+    --line: #26262f;
+    --line-strong: #34343f;
+    --text: #ececE6;
+    --text-muted: #9a9aa5;
+    --text-faint: #868691;
+    --accent: #ff6a1a;
+    --accent-hover: #ff7f3a;
+    --on-accent: #0d0d12;
+    --accent-text: #ff8a4c;
+    --accent-soft: #2a1810;
+    --positive: #4fbf85;
+    --positive-soft: #12261b;
+    --danger: #ff6b5e;
+    --danger-soft: #2c1412;
+    --shadow-float: 0 12px 32px -8px rgb(0 0 0 / 0.6), 0 2px 6px -2px rgb(0 0 0 / 0.4);
+    --scrim: rgb(0 0 0 / 0.55);
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-chrome: var(--chrome);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-faint: var(--text-faint);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-accent-text: var(--accent-text);
+  --color-accent-soft: var(--accent-soft);
+  --color-positive: var(--positive);
+  --color-positive-soft: var(--positive-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-serif: var(--font-instrument), Georgia, serif;
+  --font-logo: var(--font-sora), var(--font-geist-sans), sans-serif;
+
+  --shadow-float: var(--shadow-float);
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--text);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  input,
+  textarea,
+  select {
+    caret-color: var(--accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--text-faint);
+    opacity: 1;
+  }
+
+  a {
+    text-underline-offset: 3px;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  select:not(:disabled) {
+    cursor: pointer;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0.55;
+    cursor: pointer;
+  }
+  :root[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+  }
+
+  dialog::backdrop {
+    background: var(--scrim);
+  }
+}
+
+@layer utilities {
+  /* Cifras de datos: mono tabular. */
+  .num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Etiquetas de estado y cabeceras de tabla. */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+    text-transform: uppercase;
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes pulse-dot {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

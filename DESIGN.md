@@ -14,7 +14,7 @@ colors:
   dark-line-strong: "#34343f"
   dark-text: "#ececE6"
   dark-text-muted: "#9a9aa5"
-  dark-text-faint: "#6e6e79"
+  dark-text-faint: "#868691"
   dark-accent: "#ff6a1a"
   dark-accent-text: "#ff8a4c"
   dark-accent-soft: "#2a1810"
@@ -28,7 +28,7 @@ colors:
   light-line-strong: "#d4d4cc"
   light-text: "#0d0d12"
   light-text-muted: "#5f5f69"
-  light-text-faint: "#8b8b94"
+  light-text-faint: "#6b6b75"
   light-accent: "#ff6a1a"
   light-accent-text: "#b4470f"
   light-accent-soft: "#fff0e6"
@@ -41,18 +41,18 @@ typography:
     letterSpacing: "-0.02em"
   display:
     fontFamily: "Instrument Serif, Georgia, serif"
-    fontSize: "28px"
+    fontSize: "34px"
     fontWeight: 400
     lineHeight: 1.1
   title:
     fontFamily: "Geist, system-ui, sans-serif"
-    fontSize: "18px"
+    fontSize: "15px"
     fontWeight: 600
     lineHeight: 1.3
     letterSpacing: "-0.01em"
   heading:
     fontFamily: "Geist, system-ui, sans-serif"
-    fontSize: "14px"
+    fontSize: "13px"
     fontWeight: 600
     lineHeight: 1.4
   body:
@@ -62,7 +62,7 @@ typography:
     lineHeight: 1.5
   small:
     fontFamily: "Geist, system-ui, sans-serif"
-    fontSize: "13px"
+    fontSize: "12px"
     fontWeight: 400
     lineHeight: 1.45
   label:
@@ -73,7 +73,7 @@ typography:
     letterSpacing: "0.04em"
   figure:
     fontFamily: "Geist Mono, ui-monospace, monospace"
-    fontSize: "24px"
+    fontSize: "22px"
     fontWeight: 500
     lineHeight: 1.1
     fontFeature: "tnum"
@@ -137,7 +137,7 @@ components:
 
 # Design System: SondIA ERP
 
-> Estado: **semilla de marca** (15 oct 2026). Tokens fijados desde la identidad existente de SondIA antes de escribir código. Al cerrar la Fase 1 se revisa en modo escaneo contra lo construido y se completa `.impeccable/design.json`.
+> Estado: revisado al cerrar la Fase 1 (15 oct 2026) contra lo construido. Los tokens viven en `src/app/globals.css`; este documento manda si hay dudas.
 
 ## Overview
 
@@ -160,13 +160,16 @@ Un negro tinta con un punto de violeta, un blanco hueso cálido y un naranja bra
 - **Ink `#0d0d12`**: fondo del tema oscuro y texto principal del claro.
 - **Ember `#ff6a1a`**: botón principal, foco, indicador de navegación activa, avisos (OBV sin redactar, próxima acción vencida, horas por debajo del ritmo). Como relleno lleva siempre texto Ink (6,8:1); **nunca texto blanco sobre naranja** (2,7:1).
 - **Ember como texto**: en oscuro `#ff8a4c` (7,8:1 sobre surface); en claro `#b4470f` (5,2:1 sobre bone). El `#ff6a1a` puro sobre claro no llega a 3:1 y no se usa para texto.
+- **Texto tenue** (placeholders, elementos de fases futuras): `#6b6b75` en claro y `#868691` en oscuro, ≥ 4,5:1 sobre todas las superficies.
 - **Bone `#fafaf7`**: fondo del tema claro.
 - **Positivo** (Hecha, Ganado, objetivo cumplido) y **Peligro** (error, Perdido, «No contactar») son funcionales, poco saturados y nunca compiten con el naranja.
 - Responsables (Guzmán, Dani, Hugo) se distinguen por iniciales en un avatar neutro, no por color.
 
 ## Typography
 
-- **Geist** para toda la interfaz. Escala corta: 18 / 14 / 13, pesos 400 y 600.
+- **Geist** para toda la interfaz. Escala en uso (px): 11 · 12 · 13 · 14 · 15 · 20, pesos 400, 500 y 600. 13 px es el texto de trabajo (filas, botones, campos); 12 px el secundario; 11 px solo etiquetas mono y chips; 15 px el título de página; 20 px el título de acceso. En móvil los campos suben a 16 px para que iOS no haga zoom.
+- **Cifras grandes** (indicadores de Mi espacio): Geist Mono 22 px. No hay números «héroe» más grandes.
+- **Instrument Serif**: el saludo de Mi espacio, 30 px en móvil y 34 px en escritorio.
 - **Geist Mono** para horas, euros, fechas en tablas, números de LP/OBV y etiquetas de estado. Siempre `tabular-nums`.
 - **Instrument Serif** solo en un titular puntual por pantalla como mucho (p. ej. el saludo de Mi espacio). Nunca en tablas ni botones.
 - **Sora** solo en el logotipo «sondia».
